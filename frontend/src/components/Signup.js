@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import {
   Button,
   FormControl,
@@ -7,20 +9,69 @@ import {
   InputRightElement,
   VStack,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { useState } from "react";
+import { useToast } from "@chakra-ui/react";
 
 const Signup = () => {
+  const toast = useToast();
+  const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const [name, setName] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
+  const [loading, setLoading] = useState(false);
 
   const showHandler = () => {
     setShow(!show);
   };
 
-  const submitHandler = () => {};
+  const submitHandler = async () => {
+    if (!name.trim() || !email.trim() || !password.trim()) {
+      toast({
+        title: "Validation Error",
+        description: "Please fill all required fields with sign '*'",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+    if (password !== confirmPassword) {
+      toast({
+        title: "Validation Error",
+        description: "confirm password does not match password",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+    setLoading(true);
+    try {
+      const config = {
+        headers: { "Content-Type": "application/json" },
+      };
+      const { data } = await axios.post(
+        "http://localhost:5000/api/users/signup",
+        { name, email, password },
+        config
+      );
+      localStorage.setItem("userInfo", JSON.stringify(data));
+      toast({
+        title: "Account created.",
+        description: "We've created your account for you.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+      setLoading(false);
+      return navigate("chats");
+    } catch (error) {
+      console.log(error);
+      return setLoading(false);
+    }
+  };
 
   return (
     <VStack spacing={"5px"}>
@@ -73,6 +124,7 @@ const Signup = () => {
         width={"100%"}
         marginTop={".8rem"}
         onClick={submitHandler}
+        isLoading={loading}
       >
         Signup
       </Button>

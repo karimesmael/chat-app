@@ -1,23 +1,31 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
 const app = require("express")();
 const cors = require("cors");
+const userRoutes = require("./routes/userRoutes");
+const chatRoutes = require("./routes/chatRoutes");
 const { chats } = require("./data/data");
 
 app.use(cors());
+app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
+app.use("/api/users", userRoutes);
+app.use("/api/chats", chatRoutes);
 
-app.get("/api/chats", (req, res) => {
-  res.send(chats);
+app.use((req, res, next) => {
+  const status = 404;
+  res.status(status).json({ message: "URL not Found" });
 });
-app.get("/api/chats/:id", (req, res) => {
-  const chat = chats.find((chat) => chat._id === req.params.id);
-  res.send(chat);
+app.use((error, req, res, next) => {
+  console.log(error);
+  const status = error.statusCode || 500;
+  const message = error.message;
+  res.status(status).json({ message: message });
 });
-
 mongoose
   .connect(process.env.MONGO_URI)
   .then((res) => {
