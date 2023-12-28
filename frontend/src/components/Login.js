@@ -48,11 +48,9 @@ const Login = () => {
       );
       localStorage.setItem("userInfo", JSON.stringify(data));
       toast({
-        title: "Account created.",
-        description: "We've created your account for you.",
+        title: "Login Successful",
         status: "success",
-        duration: 5000,
-        isClosable: true,
+        duration: 2000,
       });
       setLoading(false);
       return navigate("chats");
@@ -75,6 +73,7 @@ const Login = () => {
         <Input
           placeholder="Enter your email"
           onChange={(e) => setEmail(e.target.value)}
+          value={email}
         />
       </FormControl>
       <FormControl id="password" isRequired>
@@ -84,6 +83,7 @@ const Login = () => {
             type={show ? "text" : "password"}
             placeholder="Enter your password"
             onChange={(e) => setPassword(e.target.value)}
+            value={password}
           />
           <InputRightElement w={"4.5rem"}>
             <Button h={"1.75rem"} size={"sm"} onClick={showHandler}>
