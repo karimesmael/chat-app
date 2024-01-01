@@ -48,7 +48,16 @@ exports.login = asyncHandler(async (req, res) => {
   if (!comparedPassword) {
     throw new HttpError("Error in password or email", 401);
   }
-  return res.status(201).json({ user, token: generateToken(user._id) });
+
+  return res
+    .status(201)
+    .json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      pic: user.pic,
+      token: generateToken(user._id),
+    });
 });
 
 //api/users?search=....
@@ -63,6 +72,6 @@ exports.getUsers = asyncHandler(async (req, res) => {
     : {};
   const users = await User.find(keyword)
     .find({ _id: { $ne: req.userId } })
-    .select("name");
+    .select("name email pic");
   return res.status(200).send(users);
 });

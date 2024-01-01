@@ -13,8 +13,8 @@ router.use(checkAuth);
 router.post("/", accessChat);
 router.get("/", getChats);
 router.post("/createGroup", createGroup);
-router.put("/group/rename", renameGroup);
-router.put("/group/add", addToGroup);
-router.put("/group/remove", removeFromGroup);
+router.put("/rename", renameGroup);
+router.put("/add", addToGroup);
+router.put("/remove", removeFromGroup);
 
 module.exports = router;
