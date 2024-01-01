@@ -5,7 +5,7 @@ const app = require("express")();
 const cors = require("cors");
 const userRoutes = require("./routes/userRoutes");
 const chatRoutes = require("./routes/chatRoutes");
-const { chats } = require("./data/data");
+const messageRoutes = require("./routes/messageRoutes");
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -15,6 +15,7 @@ app.get("/", (req, res) => {
 });
 app.use("/api/users", userRoutes);
 app.use("/api/chats", chatRoutes);
+app.use("/api/message", messageRoutes);
 
 app.use((req, res, next) => {
   const status = 404;
