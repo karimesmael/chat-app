@@ -36,13 +36,12 @@ exports.connectToSocket = (server) => {
 
     socket.on("disconnect", () => {
       if (currentUser) {
-        console.log("User disconnected: " + currentUser._id);
         socket.leave(currentUser._id);
       }
     });
-    // socket.off("setup", () => {
-    //   console.log("USER DISCONNECTED");
-    //   socket.leave(userData._id);
-    // });
+    socket.off("setup", () => {
+      console.log("USER DISCONNECTED");
+      socket.leave(userData._id);
+    });
   });
 };

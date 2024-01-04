@@ -9,7 +9,7 @@ import { ChatState } from "../../Context/ChatProvider";
 import { getSender } from "../../util/ChatLogics";
 import GroupChatModal from "./GroupChatModal";
 
-const MyChats = ({ fetchAgain }) => {
+const MyChats = ({ fetchAgain, setFetchAgain }) => {
   const [loggedUser, setLoggedUser] = useState();
 
   const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState();
@@ -31,10 +31,11 @@ const MyChats = ({ fetchAgain }) => {
         title: "Error Occured!",
         description: "Failed to Load the chats",
         status: "error",
-        duration: 5000,
+        duration: 2000,
         isClosable: true,
         position: "bottom-left",
       });
+      setFetchAgain(!fetchAgain);
     }
   };
 

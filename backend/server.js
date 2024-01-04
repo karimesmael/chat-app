@@ -10,9 +10,13 @@ const path = require("path");
 const { connectToMongoDB } = require("./util/connectToMongoDB");
 const { connectToSocket } = require("./socket/socket-io");
 
-connectToMongoDB();
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+    credentials: true,
+  })
+);
 app.use(bodyParser.json());
 
 app.use("/api/users", userRoutes);
@@ -48,6 +52,7 @@ app.use((error, req, res, next) => {
   res.status(status).json({ message: message });
 });
 
-const server = app.listen(process.env.PORT || 5000, () => {});
-
-connectToSocket(server);
+connectToMongoDB().then(() => {
+  const server = app.listen(process.env.PORT || 5000, () => {});
+  connectToSocket(server);
+});
