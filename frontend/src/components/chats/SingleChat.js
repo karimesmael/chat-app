@@ -24,7 +24,7 @@ const defaultOptions = {
     preserveAspectRatio: "xMidYMid slice",
   },
 };
-const ENDPOINT = "http://localhost:5000";
+const ENDPOINT = "https://free-talk-cha.onrender.com";
 let socket;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
