@@ -25,7 +25,6 @@ import UserListItem from "./UserListItem";
 const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [groupChatName, setGroupChatName] = useState();
-  const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
   const [renameloading, setRenameLoading] = useState(false);
@@ -46,10 +45,7 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
           Authorization: `Bearer ${user.token}`,
         },
       };
-      const { data } = await axios.get(
-        `http://localhost:5000/api/users?search=${query}`,
-        config
-      );
+      const { data } = await axios.get(`/api/users?search=${query}`, config);
       setLoading(false);
       setSearchResult(data);
     } catch (error) {
@@ -75,7 +71,7 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
         },
       };
       const { data } = await axios.put(
-        `http://localhost:5000/api/chats/rename`,
+        `/api/chats/rename`,
         {
           chatId: selectedChat._id,
           chatName: groupChatName,
@@ -133,7 +129,7 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
         },
       };
       const { data } = await axios.put(
-        `http://localhost:5000/api/chats/add`,
+        `/api/chats/add`,
         {
           chatId: selectedChat._id,
           userId: user1._id,
@@ -178,7 +174,7 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
         },
       };
       const { data } = await axios.put(
-        `http://localhost:5000/api/chats/remove`,
+        `/api/chats/remove`,
         {
           chatId: selectedChat._id,
           userId: user1._id,

@@ -1,21 +1,41 @@
 require("dotenv").config();
-const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const app = require("express")();
+const express = require("express");
 const cors = require("cors");
 const userRoutes = require("./routes/userRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const messageRoutes = require("./routes/messageRoutes");
+const path = require("path");
 
+const { connectToMongoDB } = require("./util/connectToMongoDB");
+const { connectToSocket } = require("./socket/socket-io");
+
+connectToMongoDB();
+const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-app.get("/", (req, res) => {
-  res.send("API is running...");
-});
 app.use("/api/users", userRoutes);
 app.use("/api/chats", chatRoutes);
 app.use("/api/message", messageRoutes);
+
+// --------------------------deployment------------------------------
+
+const __dirname1 = path.resolve();
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname1, "/frontend/build")));
+
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve(__dirname1, "frontend", "build", "index.html"))
+  );
+} else {
+  app.get("/", (req, res) => {
+    res.send("API is running..");
+  });
+}
+
+// --------------------------deployment------------------------------
 
 app.use((req, res, next) => {
   const status = 404;
@@ -27,13 +47,7 @@ app.use((error, req, res, next) => {
   const message = error.message;
   res.status(status).json({ message: message });
 });
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then((res) => {
-    console.log("connected to MONGOB");
-    app.listen(process.env.PORT || 3000);
-    console.log("server is running on 5000");
-  })
-  .catch((err) => {
-    console.log(err.message);
-  });
+
+const server = app.listen(process.env.PORT || 5000, () => {});
+
+connectToSocket(server);

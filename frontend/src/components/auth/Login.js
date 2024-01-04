@@ -25,7 +25,7 @@ const Login = () => {
   };
 
   const submitHandler = async () => {
-    if (!email.trim() || !password.trim()) {
+    if (!email || !password) {
       toast({
         title: "Validation Error",
         description: "Please fill all required fields with sign '*'",
@@ -37,15 +37,17 @@ const Login = () => {
     }
 
     setLoading(true);
+    console.log("///");
     try {
       const config = {
         headers: { "Content-Type": "application/json" },
       };
       const { data } = await axios.post(
-        "http://localhost:5000/api/users/login",
+        "/api/users/login",
         { email, password },
         config
       );
+      console.log(data);
       localStorage.setItem("userInfo", JSON.stringify(data));
       toast({
         title: "Login Successful",
@@ -55,6 +57,7 @@ const Login = () => {
       setLoading(false);
       return navigate("chats");
     } catch (error) {
+      console.log(error);
       toast({
         title: "Error",
         description: "error in email or password",

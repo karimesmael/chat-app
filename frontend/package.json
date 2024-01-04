@@ -1,6 +1,7 @@
 {
   "name": "frontend",
   "version": "0.1.0",
+  "proxy": "http://127.0.0.1:5000",
   "private": true,
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
@@ -14,14 +15,17 @@
     "framer-motion": "^10.16.16",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-notification-badge": "^1.5.1",
     "react-router-dom": "^6.21.1",
     "react-scripts": "5.0.1",
     "react-scrollable-feed": "^2.0.1",
+    "react-type-animation": "^3.2.0",
+    "socket.io-client": "^4.7.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "react-scripts --openssl-legacy-provider start",
+    "build": "react-scripts --openssl-legacy-provider build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

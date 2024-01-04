@@ -45,7 +45,7 @@ exports.getChats = asyncHandler(async (req, res) => {
     .populate("users", "-password")
     .populate("groupAdmin", "-password")
     .populate("latestMessage")
-    .sort({ apdatedAt: -1 });
+    .sort({ updatedAt: -1 });
   return res.status(201).send(chats);
 });
 

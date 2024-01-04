@@ -27,7 +27,7 @@ const Signup = () => {
   };
 
   const submitHandler = async () => {
-    if (!name.trim() || !email.trim() || !password.trim()) {
+    if (!name || !email || !password) {
       toast({
         title: "Validation Error",
         description: "Please fill all required fields with sign '*'",
@@ -53,7 +53,7 @@ const Signup = () => {
         headers: { "Content-Type": "application/json" },
       };
       const { data } = await axios.post(
-        "http://localhost:5000/api/users/signup",
+        "/api/users/signup",
         { name, email, password },
         config
       );

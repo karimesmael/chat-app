@@ -49,15 +49,13 @@ exports.login = asyncHandler(async (req, res) => {
     throw new HttpError("Error in password or email", 401);
   }
 
-  return res
-    .status(201)
-    .json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      pic: user.pic,
-      token: generateToken(user._id),
-    });
+  return res.status(201).json({
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    pic: user.pic,
+    token: generateToken(user._id),
+  });
 });
 
 //api/users?search=....

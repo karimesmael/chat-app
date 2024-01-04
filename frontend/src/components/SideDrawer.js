@@ -27,6 +27,9 @@ import axios from "axios";
 import ChatLoading from "./chats/ChatLoading";
 import UserListItem from "./UserListItem";
 import { ChatState } from "../Context/ChatProvider";
+import { getSender } from "../util/ChatLogics";
+import NotificationBadge from "react-notification-badge";
+import { Effect } from "react-notification-badge";
 
 const SideDrawer = ({ user }) => {
   const [search, setSearch] = useState("");
@@ -65,10 +68,7 @@ const SideDrawer = ({ user }) => {
         },
       };
 
-      const { data } = await axios.get(
-        `http://localhost:5000/api/users?search=${search}`,
-        config
-      );
+      const { data } = await axios.get(`/api/users?search=${search}`, config);
 
       setLoading(false);
       setSearchResult(data);
@@ -93,11 +93,7 @@ const SideDrawer = ({ user }) => {
           Authorization: `Bearer ${user.token}`,
         },
       };
-      const { data } = await axios.post(
-        `http://localhost:5000/api/chats`,
-        { userId },
-        config
-      );
+      const { data } = await axios.post(`/api/chats`, { userId }, config);
 
       console.log(data);
 
@@ -143,8 +139,28 @@ const SideDrawer = ({ user }) => {
         <div>
           <Menu>
             <MenuButton p={1}>
+              <NotificationBadge
+                count={notification.length}
+                effect={Effect.SCALE}
+              />
               <BellIcon fontSize={"2x1"} m={1} />
             </MenuButton>
+            <MenuList>
+              {!notification.length && "No new messages"}
+              {notification.map((not) => (
+                <MenuItem
+                  key={not._id}
+                  onClick={() => {
+                    setSelectedChat(not.chatId);
+                    setNotification(notification.filter((n) => n !== not));
+                  }}
+                >
+                  {not.chatId.isGroupChat
+                    ? `New message in ${not.chatId.chatName}`
+                    : `New message from ${getSender(user, not.chatId.users)}`}
+                </MenuItem>
+              ))}
+            </MenuList>
           </Menu>
           <Menu>
             <MenuButton as={Button} bg="white" rightIcon={<ChevronDownIcon />}>

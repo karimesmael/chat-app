@@ -12,14 +12,49 @@ import ProfileModal from "../ProfileModal";
 import { ChatState } from "../../Context/ChatProvider";
 import UpdateGroupChatModal from "../UpdateGroupChatModal";
 import Chat from "./Chat";
+import io from "socket.io-client";
+import Lottie from "react-lottie";
+import animationData from "../../animations/typing.json";
+
+const defaultOptions = {
+  loop: true,
+  autoplay: true,
+  animationData,
+  rendererSettings: {
+    preserveAspectRatio: "xMidYMid slice",
+  },
+};
+const ENDPOINT = "http://localhost:5000";
+let socket;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState();
   const [loading, setLoading] = useState(false);
   const toast = useToast();
+  const { selectedChat, setSelectedChat, user, notification, setNotification } =
+    ChatState();
+  const [typing, setTyping] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const [socketConnected, setSocketConnected] = useState(false);
 
-  const { selectedChat, setSelectedChat, user } = ChatState();
+  useEffect(() => {
+    socket = io(ENDPOINT);
+    socket.emit("setup", user);
+    socket.on("connected", () => {
+      setSocketConnected(true);
+    });
+    socket.on("typing", (userId) => {
+      if (user._id !== userId) {
+        setIsTyping(true);
+      }
+    });
+    socket.on("stop typing", (userId) => {
+      if (user._id !== userId) {
+        setIsTyping(false);
+      }
+    });
+  });
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
@@ -31,12 +66,13 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         },
       };
       const { data } = await axios.get(
-        "http://localhost:5000/api/message/" + selectedChat._id,
+        "/api/message/" + selectedChat._id,
         config
       );
       console.log(data);
       setMessages(data);
       setLoading(false);
+      socket.emit("join chat", selectedChat._id);
     } catch (error) {
       toast({
         title: "failed to load messages",
@@ -48,6 +84,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
   const sendMessage = async (e) => {
     if (e.key === "Enter" && newMessage) {
+      socket.emit("stop typing", selectedChat._id);
       try {
         const config = {
           headers: {
@@ -56,17 +93,17 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           },
         };
         const { data } = await axios.post(
-          "http://localhost:5000/api/message/",
+          "/api/message/",
           {
             content: newMessage,
             chatId: selectedChat._id,
           },
           config
         );
-        console.log(data);
         setNewMessage("");
+        socket.emit("new message", data);
         setMessages([...messages, data]);
-        // throw new Error("failed to send message");
+        setFetchAgain(!fetchAgain);
       } catch (error) {
         toast({
           status: "error",
@@ -79,10 +116,39 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   };
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
+    if (!socketConnected) return;
+    if (!typing) {
+      setTyping(true);
+      socket.emit("typing", selectedChat._id);
+    }
+    let lastTyping = new Date().getTime();
+    let duration = 3000;
+    setTimeout(() => {
+      let current = new Date().getTime();
+      let timeDif = current - lastTyping;
+      if (timeDif >= duration && typing) {
+        setTyping(false);
+        socket.emit("stop typing", selectedChat._id);
+      }
+    }, duration);
   };
   useEffect(() => {
     fetchMessages();
   }, [selectedChat]);
+
+  useEffect(() => {
+    socket.on("message recieved", (newMessage) => {
+      if (!selectedChat || selectedChat._id !== newMessage.chatId._id) {
+        if (!notification.includes(newMessage)) {
+          setNotification([newMessage, ...notification]);
+          setFetchAgain(!fetchAgain);
+        }
+      } else {
+        setMessages([...messages, newMessage]);
+      }
+    });
+  });
+
   return (
     <>
       {selectedChat ? (
@@ -144,6 +210,14 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               </div>
             )}
             <FormControl onKeyDown={sendMessage} mt={3}>
+              {isTyping && (
+                <Lottie
+                  options={defaultOptions}
+                  width={"70px"}
+                  height={"30px"}
+                  style={{ marginBottom: 15, marginLeft: 1 }}
+                />
+              )}
               <Input
                 variant={"filled"}
                 bg="#DDD"
