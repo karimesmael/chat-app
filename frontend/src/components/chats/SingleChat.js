@@ -24,7 +24,8 @@ const defaultOptions = {
     preserveAspectRatio: "xMidYMid slice",
   },
 };
-const ENDPOINT = "https://free-talk-cha.onrender.com";
+const ENDPOINT =
+  "https://free-talk-cha.onrender.com" || "http://localhost:5000";
 let socket;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
@@ -34,9 +35,9 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const toast = useToast();
   const { selectedChat, setSelectedChat, user, notification, setNotification } =
     ChatState();
-  const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [socketConnected, setSocketConnected] = useState(false);
+  const [timer, setTimer] = useState(null);
 
   useEffect(() => {
     socket = io(ENDPOINT);
@@ -117,20 +118,15 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
     if (!socketConnected) return;
-    if (!typing) {
-      setTyping(true);
-      socket.emit("typing", selectedChat._id);
-    }
-    let lastTyping = new Date().getTime();
+
+    socket.emit("typing", selectedChat._id);
+    clearTimeout(timer);
     let duration = 3000;
-    setTimeout(() => {
-      let current = new Date().getTime();
-      let timeDif = current - lastTyping;
-      if (timeDif >= duration && typing) {
-        setTyping(false);
+    setTimer(
+      setTimeout(() => {
         socket.emit("stop typing", selectedChat._id);
-      }
-    }, duration);
+      }, duration)
+    );
   };
   useEffect(() => {
     fetchMessages();

@@ -34,14 +34,14 @@ exports.connectToSocket = (server) => {
       });
     });
 
-    socket.on("disconnect", () => {
-      if (currentUser) {
-        socket.leave(currentUser._id);
-      }
-    });
-    socket.off("setup", () => {
-      console.log("USER DISCONNECTED");
-      socket.leave(userData._id);
-    });
+    // socket.on("disconnect", () => {
+    //   if (currentUser) {
+    //     socket.leave(currentUser._id);
+    //   }
+    // });
+    // socket.off("setup", () => {
+    //   console.log("USER DISCONNECTED");
+    //   socket.leave(userData._id);
+    // });
   });
 };
