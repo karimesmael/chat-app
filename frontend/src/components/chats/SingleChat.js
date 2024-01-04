@@ -46,7 +46,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       setSocketConnected(true);
     });
     socket.on("message recieved", (newMessage) => {
-      setMessages((prevMsg) => [...prevMsg, newMessage]);
+      setMessages([messages, newMessage]);
       if (!selectedChat || selectedChat._id !== newMessage.chatId._id) {
         if (!notification.includes(newMessage)) {
           setNotification([newMessage, ...notification]);
