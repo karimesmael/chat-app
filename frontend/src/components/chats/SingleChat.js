@@ -40,7 +40,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
   useEffect(() => {
     fetchMessages();
-  }, [selectedChat]);
+  }, []);
 
   useEffect(() => {
     socket = io(ENDPOINT);
