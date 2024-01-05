@@ -48,16 +48,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     socket.on("connected", () => {
       setSocketConnected(true);
     });
-    // socket.on("message recieved", (newMessage) => {
-    //   if (!selectedChat || selectedChat._id !== newMessage.chatId._id) {
-    //     if (!notification.includes(newMessage)) {
-    //       setNotification([newMessage, ...notification]);
-    //       setFetchAgain(!fetchAgain);
-    //     }
-    //   } else {
-    //     setMessages([...messages, newMessage]);
-    //   }
-    // });
     socket.on("typing", (userId) => {
       if (user._id !== userId) {
         setIsTyping(true);
@@ -68,9 +58,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         setIsTyping(false);
       }
     });
-    return () => {
-      socket.off("message recieved");
-    };
   });
 
   const fetchMessages = async () => {
