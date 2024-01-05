@@ -40,6 +40,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [timer, setTimer] = useState(null);
 
   useEffect(() => {
+    fetchMessages();
+  }, [selectedChat]);
+
+  useEffect(() => {
     socket = io(ENDPOINT);
     socket.emit("setup", user);
     socket.on("connected", () => {
@@ -94,6 +98,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
   const sendMessage = async (e) => {
     if (e.key === "Enter" && newMessage) {
+      if (newMessage.trim() === "") return;
       socket.emit("stop typing", selectedChat._id);
       try {
         const config = {
