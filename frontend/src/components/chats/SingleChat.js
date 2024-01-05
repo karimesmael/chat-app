@@ -72,8 +72,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     });
     return () => {
       socket.off("message recieved");
-      socket.off("typing");
-      socket.off("stop typing");
     };
   });
 

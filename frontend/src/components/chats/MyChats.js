@@ -35,7 +35,6 @@ const MyChats = ({ fetchAgain, setFetchAgain }) => {
         isClosable: true,
         position: "bottom-left",
       });
-      setFetchAgain(!fetchAgain);
     }
   };
 
