@@ -40,7 +40,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
   useEffect(() => {
     fetchMessages();
-  }, []);
+  }, [selectedChat]);
 
   useEffect(() => {
     socket = io(ENDPOINT);
@@ -82,6 +82,9 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         setMessages([...messages, newMessage]);
       }
     });
+    return () => {
+      socket.off("message received");
+    };
   });
 
   const fetchMessages = async () => {
