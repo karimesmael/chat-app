@@ -72,6 +72,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       }
     });
     return () => {
+      socket.off("connected");
+      socket.off("message received");
+      socket.off("typing");
+      socket.off("stop typing");
       socket.disconnect();
     };
   });
