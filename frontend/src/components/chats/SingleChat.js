@@ -48,6 +48,19 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     socket.on("connected", () => {
       setSocketConnected(true);
     });
+    socket.on("message recieved", (newMessage) => {
+      if (
+        !selectedChatCompare || // if chat is not selected or doesn't match current chat
+        selectedChatCompare._id !== newMessage.chatId._id
+      ) {
+        if (!notification.includes(newMessage)) {
+          setNotification([newMessage, ...notification]);
+          setFetchAgain(!fetchAgain);
+        }
+      } else {
+        setMessages([...messages, newMessage]);
+      }
+    });
     socket.on("typing", (userId) => {
       if (user._id !== userId) {
         setIsTyping(true);
@@ -58,6 +71,9 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         setIsTyping(false);
       }
     });
+    return () => {
+      socket.disconnect();
+    };
   });
 
   const fetchMessages = async () => {
@@ -136,22 +152,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     fetchMessages();
     selectedChatCompare = selectedChat;
   }, [selectedChat]);
-
-  useEffect(() => {
-    socket.on("message recieved", (newMessage) => {
-      if (
-        !selectedChatCompare || // if chat is not selected or doesn't match current chat
-        selectedChatCompare._id !== newMessage.chatId._id
-      ) {
-        if (!notification.includes(newMessage)) {
-          setNotification([newMessage, ...notification]);
-          setFetchAgain(!fetchAgain);
-        }
-      } else {
-        setMessages([...messages, newMessage]);
-      }
-    });
-  });
 
   return (
     <>
