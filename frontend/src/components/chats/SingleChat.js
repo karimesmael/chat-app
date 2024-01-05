@@ -70,6 +70,11 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         setIsTyping(false);
       }
     });
+    return () => {
+      socket.off("message recieved");
+      socket.off("typing");
+      socket.off("stop typing");
+    };
   });
 
   const fetchMessages = async () => {
