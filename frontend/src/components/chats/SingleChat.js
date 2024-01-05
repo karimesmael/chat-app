@@ -25,7 +25,7 @@ const defaultOptions = {
   },
 };
 const ENDPOINT = "https://free-talk-cha.onrender.com";
-let socket;
+let socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [messages, setMessages] = useState([]);
@@ -48,16 +48,16 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     socket.on("connected", () => {
       setSocketConnected(true);
     });
-    socket.on("message recieved", (newMessage) => {
-      if (!selectedChat || selectedChat._id !== newMessage.chatId._id) {
-        if (!notification.includes(newMessage)) {
-          setNotification([newMessage, ...notification]);
-          setFetchAgain(!fetchAgain);
-        }
-      } else {
-        setMessages([...messages, newMessage]);
-      }
-    });
+    // socket.on("message recieved", (newMessage) => {
+    //   if (!selectedChat || selectedChat._id !== newMessage.chatId._id) {
+    //     if (!notification.includes(newMessage)) {
+    //       setNotification([newMessage, ...notification]);
+    //       setFetchAgain(!fetchAgain);
+    //     }
+    //   } else {
+    //     setMessages([...messages, newMessage]);
+    //   }
+    // });
     socket.on("typing", (userId) => {
       if (user._id !== userId) {
         setIsTyping(true);
@@ -147,7 +147,27 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   };
   useEffect(() => {
     fetchMessages();
+    selectedChatCompare = selectedChat;
   }, [selectedChat]);
+
+  useEffect(() => {
+    socket.on("message recieved", (newMessageRecieved) => {
+      if (
+        !selectedChatCompare || // if chat is not selected or doesn't match current chat
+        selectedChatCompare._id !== newMessageRecieved.chat._id
+      ) {
+        if (
+          !notification.includes(newMessageRecieved) &&
+          !notification.chatId._id.includes(newMessageRecieved.chatId._id)
+        ) {
+          setNotification([newMessageRecieved, ...notification]);
+          setFetchAgain(!fetchAgain);
+        }
+      } else {
+        setMessages([...messages, newMessageRecieved]);
+      }
+    });
+  });
 
   return (
     <>
