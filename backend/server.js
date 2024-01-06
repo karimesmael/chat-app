@@ -13,7 +13,7 @@ const { connectToSocket } = require("./socket/socket-io");
 const app = express();
 app.use(
   cors({
-    origin: "*",
+    origin: "https://free-talk-cha.onrender.com",
     credentials: true,
   })
 );
