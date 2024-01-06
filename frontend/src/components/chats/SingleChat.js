@@ -98,11 +98,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       setLoading(false);
       socket.emit("join chat", selectedChat._id);
     } catch (error) {
-      toast({
-        title: "failed to load messages",
-        duration: "1000",
-        status: "error",
-      });
       setTimeout(() => {
         fetchMessages();
       }, 2000);
