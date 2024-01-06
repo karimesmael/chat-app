@@ -41,9 +41,5 @@ exports.connectToSocket = (server) => {
         socket.leave(currentUser._id);
       }
     });
-    socket.off("setup", () => {
-      console.log("USER DISCONNECTED");
-      socket.leave(userData._id);
-    });
   });
 };

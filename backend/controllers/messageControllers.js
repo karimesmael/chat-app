@@ -32,5 +32,3 @@ exports.getMessages = asyncHandler(async (req, res) => {
     .populate("chatId");
   return res.json(messages);
 });
-
-// exports.sendMessage = asyncHandler(async (req, res) => {});
