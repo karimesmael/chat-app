@@ -6,8 +6,10 @@ exports.connectToSocket = (server) => {
 
   io.on("connection", (socket) => {
     let currentUser;
+    socket.on("error", (err) => {
+      console.error("Socket.IO Error:", err);
+    });
     socket.on("setup", (userData) => {
-      if (!userData) return;
       currentUser = userData;
       socket.join(userData._id);
       socket.emit("connected");
