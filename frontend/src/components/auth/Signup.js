@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useToast } from "@chakra-ui/react";
+import { isValidEmail } from "../../util/validation";
 
 const Signup = () => {
   const toast = useToast();
@@ -26,27 +27,39 @@ const Signup = () => {
     setShow(!show);
   };
 
+  const showToast = (description) => {
+    toast({
+      title: "Validation Error",
+      description: description,
+      status: "error",
+      duration: 1800,
+      isClosable: true,
+    });
+  };
+
   const submitHandler = async () => {
     if (!name || !email || !password) {
-      toast({
-        title: "Validation Error",
-        description: "Please fill all required fields with sign '*'",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
+      showToast("Please fill all required fields with sign '*'");
+      return;
+    }
+
+    if (name.trim().length < 3) {
+      showToast("Name should be at least 3 ch");
+      return;
+    }
+    if (password.trim().length < 6) {
+      showToast("Password should be at least 6 ch");
       return;
     }
     if (password !== confirmPassword) {
-      toast({
-        title: "Validation Error",
-        description: "confirm password does not match password",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
+      showToast("confirm password does not match password");
       return;
     }
+    if (!isValidEmail(email)) {
+      showToast("please enter Valid email");
+      return;
+    }
+
     setLoading(true);
     try {
       const config = {
@@ -62,13 +75,19 @@ const Signup = () => {
         title: "Account created.",
         description: "We've created your account for you.",
         status: "success",
-        duration: 5000,
+        duration: 3000,
         isClosable: true,
       });
       setLoading(false);
       return navigate("chats");
     } catch (error) {
-      console.log(error);
+      toast({
+        title: "error",
+        description: error.response.data.message,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
       return setLoading(false);
     }
   };

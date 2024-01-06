@@ -37,7 +37,6 @@ const Login = () => {
     }
 
     setLoading(true);
-    console.log("///");
     try {
       const config = {
         headers: { "Content-Type": "application/json" },
@@ -62,7 +61,7 @@ const Login = () => {
         title: "Error",
         description: "error in email or password",
         status: "error",
-        duration: 3000,
+        duration: 2000,
         isClosable: true,
       });
       return setLoading(false);

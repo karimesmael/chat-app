@@ -82,10 +82,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     };
   });
 
-  useEffect(() => {});
-
   const fetchMessages = async () => {
-    if (!selectedChat) return;
     setLoading(true);
     try {
       const config = {
@@ -97,16 +94,18 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         "/api/message/" + selectedChat._id,
         config
       );
-      console.log(data);
       setMessages(data);
       setLoading(false);
       socket.emit("join chat", selectedChat._id);
     } catch (error) {
       toast({
         title: "failed to load messages",
-        duration: "3000",
+        duration: "1000",
         status: "error",
       });
+      setTimeout(() => {
+        fetchMessages();
+      }, 2000);
     }
   };
 
