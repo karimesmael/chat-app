@@ -11,15 +11,18 @@ import {
 import Login from "../components/auth/Login";
 import Signup from "../components/auth/Signup";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 const HomePage = () => {
-  const navigate = useNavigate();
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("userInfo"));
-    if (user) {
-      return navigate("/chats");
-    }
-  }, [navigate]);
+    localStorage.removeItem("userInfo");
+  }, []);
+  // const navigate = useNavigate();
+  // useEffect(() => {
+  //   const user = JSON.parse(localStorage.getItem("userInfo"));
+  //   if (user) {
+  //     return navigate("/chats");
+  //   }
+  // }, [navigate]);
   return (
     <Container maxW={"xl"} centerContent>
       <Box
