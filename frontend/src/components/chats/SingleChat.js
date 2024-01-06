@@ -73,13 +73,13 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       }
     });
 
-    return () => {
-      socket.off("connected");
-      socket.off("message received");
-      socket.off("typing");
-      socket.off("stop typing");
-      socket.disconnect();
-    };
+    // return () => {
+    //   socket.off("connected");
+    //   socket.off("message received");
+    //   socket.off("typing");
+    //   socket.off("stop typing");
+    //   socket.disconnect();
+    // };
   });
 
   const fetchMessages = async () => {
@@ -97,7 +97,11 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       setMessages(data);
       setLoading(false);
       socket.emit("join chat", selectedChat._id);
-    } catch (error) {}
+    } catch (error) {
+      setTimeout(() => {
+        fetchMessages();
+      }, 3000);
+    }
   };
 
   const sendMessage = async (e) => {
