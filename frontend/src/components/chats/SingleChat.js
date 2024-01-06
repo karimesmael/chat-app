@@ -97,11 +97,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       setMessages(data);
       setLoading(false);
       socket.emit("join chat", selectedChat._id);
-    } catch (error) {
-      setTimeout(() => {
-        fetchMessages();
-      }, 2000);
-    }
+    } catch (error) {}
   };
 
   const sendMessage = async (e) => {
