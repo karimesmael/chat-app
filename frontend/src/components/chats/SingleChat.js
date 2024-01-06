@@ -83,6 +83,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   });
 
   const fetchMessages = async () => {
+    if (!selectedChat) return;
     setLoading(true);
     try {
       const config = {
