@@ -68,18 +68,18 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           setNotification([newMessage, ...notification]);
           setFetchAgain(!fetchAgain);
         }
-      } else if (selectedChatCompare._id === newMessage.chatId._id) {
+      } else {
         setMessages([...messages, newMessage]);
       }
     });
 
-    return () => {
-      //   socket.off("connected");
-      //   socket.off("message received");
-      //   socket.off("typing");
-      //   socket.off("stop typing");
-      socket.disconnect();
-    };
+    // return () => {
+    //   //   socket.off("connected");
+    //   //   socket.off("message received");
+    //   //   socket.off("typing");
+    //   //   socket.off("stop typing");
+    //   socket.disconnect();
+    // };
   });
 
   const fetchMessages = async () => {
