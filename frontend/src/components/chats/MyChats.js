@@ -1,6 +1,5 @@
 import { AddIcon } from "@chakra-ui/icons";
 import { Box, Stack, Text } from "@chakra-ui/layout";
-import { useToast } from "@chakra-ui/toast";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import ChatLoading from "./ChatLoading";
@@ -8,15 +7,11 @@ import { Button } from "@chakra-ui/react";
 import { ChatState } from "../../Context/ChatProvider";
 import { getSender } from "../../util/ChatLogics";
 import GroupChatModal from "./GroupChatModal";
-import { useNavigate } from "react-router-dom";
 
 const MyChats = ({ fetchAgain }) => {
   const [loggedUser, setLoggedUser] = useState();
 
   const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState();
-
-  const toast = useToast();
-  const navigate = useNavigate();
 
   const fetchChats = async () => {
     try {
@@ -41,7 +36,7 @@ const MyChats = ({ fetchAgain }) => {
       //   position: "bottom-left",
       // });
       setTimeout(() => {
-        navigate("/chats");
+        fetchChats();
       }, 2500);
     }
   };
