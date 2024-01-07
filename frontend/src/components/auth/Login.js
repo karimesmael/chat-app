@@ -11,6 +11,7 @@ import {
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ChatState } from "../../Context/ChatProvider";
 
 const Login = () => {
   const toast = useToast();
@@ -19,7 +20,7 @@ const Login = () => {
   const [password, setPassword] = useState();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
+  const { setUser } = ChatState();
   const showHandler = () => {
     setShow(!show);
   };
@@ -46,8 +47,9 @@ const Login = () => {
         { email, password },
         config
       );
-      console.log(data);
+      setUser(data);
       localStorage.setItem("userInfo", JSON.stringify(data));
+
       toast({
         title: "Login Successful",
         status: "success",
@@ -56,10 +58,8 @@ const Login = () => {
       setLoading(false);
       return navigate("chats");
     } catch (error) {
-      console.log(error);
       toast({
-        title: "Error",
-        description: "error in email or password",
+        description: "wrong email or password",
         status: "error",
         duration: 2000,
         isClosable: true,
