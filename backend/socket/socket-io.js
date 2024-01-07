@@ -1,7 +1,7 @@
 exports.connectToSocket = (server) => {
   const io = require("socket.io")(server, {
     pingTimeout: 60000,
-    cors: { origin: "http://localhost:3000" },
+    cors: { origin: "https://free-talk-cha.onrender.com" },
   });
 
   io.on("connection", (socket) => {
@@ -10,6 +10,7 @@ exports.connectToSocket = (server) => {
       console.error("Socket.IO Error:", err);
     });
     socket.on("setup", (userData) => {
+      if (!userData) return;
       currentUser = userData;
       socket.join(userData._id);
       socket.emit("connected");
