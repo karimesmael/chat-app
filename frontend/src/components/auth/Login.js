@@ -12,6 +12,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChatState } from "../../Context/ChatProvider";
+import GoogleLoginButton from "./GoogleLoginButton";
 
 const Login = () => {
   const toast = useToast();
@@ -25,28 +26,40 @@ const Login = () => {
     setShow(!show);
   };
 
-  const submitHandler = async () => {
-    if (!email || !password) {
-      toast({
-        title: "Validation Error",
-        description: "Please fill all required fields with sign '*'",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
-      return;
+  const login = async (email, password) => {
+    const config = {
+      headers: { "Content-Type": "application/json" },
+    };
+    const { data } = await axios.post(
+      "/api/users/login",
+      { email, password },
+      config
+    );
+    return data;
+  };
+
+  const submitHandler = async (guest) => {
+    if (!guest) {
+      if (!email || !password) {
+        toast({
+          title: "Validation Error",
+          description: "Please fill all required fields with sign '*'",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+        return;
+      }
     }
 
     setLoading(true);
     try {
-      const config = {
-        headers: { "Content-Type": "application/json" },
-      };
-      const { data } = await axios.post(
-        "/api/users/login",
-        { email, password },
-        config
-      );
+      let data;
+      if (guest === "guest") {
+        data = await login("guest@example.com", "123456");
+      } else {
+        data = await login(email, password);
+      }
       setUser(data);
       localStorage.setItem("userInfo", JSON.stringify(data));
 
@@ -108,13 +121,13 @@ const Login = () => {
         colorScheme="red"
         width={"100%"}
         onClick={() => {
-          setEmail("guest@example.com");
-          setPassword("123456");
-          submitHandler();
+          submitHandler("guest");
         }}
       >
         Login as Guest
       </Button>
+
+      <GoogleLoginButton />
     </VStack>
   );
 };
