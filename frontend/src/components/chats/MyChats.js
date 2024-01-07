@@ -13,7 +13,6 @@ const MyChats = ({ fetchAgain }) => {
   const [loggedUser, setLoggedUser] = useState();
 
   const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState();
-  setChats();
 
   const toast = useToast();
 
@@ -28,6 +27,7 @@ const MyChats = ({ fetchAgain }) => {
       const { data } = await axios.get("/api/chats", config);
       setChats(data);
     } catch (error) {
+      console.log("fetch chats : " + error);
       // toast({
       //   title: "Failed to Load the chats",
       //   // description: error.message,
@@ -36,9 +36,9 @@ const MyChats = ({ fetchAgain }) => {
       //   isClosable: true,
       //   position: "bottom-left",
       // });
-      setTimeout(() => {
-        fetchChats();
-      }, 2500);
+      // setTimeout(() => {
+      //   fetchChats();
+      // }, 2500);
     }
   };
 
