@@ -80,7 +80,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           setFetchAgain(!fetchAgain);
         }
       } else {
-        setMessages((messages) => [...messages, newMessage]);
+        setMessages([...messages, newMessage]);
         setFetchAgain(!fetchAgain);
       }
     });
