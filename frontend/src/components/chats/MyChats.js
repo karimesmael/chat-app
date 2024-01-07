@@ -36,9 +36,9 @@ const MyChats = ({ fetchAgain }) => {
       //   isClosable: true,
       //   position: "bottom-left",
       // });
-      // setTimeout(() => {
-      //   fetchChats();
-      // }, 2500);
+      setTimeout(() => {
+        fetchChats();
+      }, 2500);
     }
   };
 
