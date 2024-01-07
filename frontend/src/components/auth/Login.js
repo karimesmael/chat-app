@@ -110,9 +110,10 @@ const Login = () => {
         onClick={() => {
           setEmail("guest@example.com");
           setPassword("123456");
+          submitHandler();
         }}
       >
-        Get Guest User Credentials
+        Login as Guest
       </Button>
     </VStack>
   );
