@@ -8,6 +8,7 @@ import { Button } from "@chakra-ui/react";
 import { ChatState } from "../../Context/ChatProvider";
 import { getSender } from "../../util/ChatLogics";
 import GroupChatModal from "./GroupChatModal";
+import { useNavigate } from "react-router-dom";
 
 const MyChats = ({ fetchAgain }) => {
   const [loggedUser, setLoggedUser] = useState();
@@ -15,6 +16,7 @@ const MyChats = ({ fetchAgain }) => {
   const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState();
 
   const toast = useToast();
+  const navigate = useNavigate();
 
   const fetchChats = async () => {
     try {
@@ -27,7 +29,9 @@ const MyChats = ({ fetchAgain }) => {
       const { data } = await axios.get("/api/chats", config);
       setChats(data);
     } catch (error) {
-      console.log("fetch chats : " + error);
+      console.log("fetch chats : ");
+      console.log(error);
+      console.log("/////////////");
       // toast({
       //   title: "Failed to Load the chats",
       //   // description: error.message,
@@ -37,7 +41,7 @@ const MyChats = ({ fetchAgain }) => {
       //   position: "bottom-left",
       // });
       setTimeout(() => {
-        fetchChats();
+        navigate("/chats");
       }, 2500);
     }
   };
