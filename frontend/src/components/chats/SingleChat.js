@@ -59,6 +59,17 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         setIsTyping(false);
       }
     });
+
+    // return () => {
+    //   //   socket.off("connected");
+    //   //   socket.off("message received");
+    //   //   socket.off("typing");
+    //   //   socket.off("stop typing");
+    //   socket.disconnect();
+    // };
+  });
+
+  useEffect(() => {
     socket.on("message recieved", (newMessage) => {
       if (
         !selectedChatCompare || // if chat is not selected or doesn't match current chat
@@ -73,14 +84,9 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         setFetchAgain(!fetchAgain);
       }
     });
-
-    // return () => {
-    //   //   socket.off("connected");
-    //   //   socket.off("message received");
-    //   //   socket.off("typing");
-    //   //   socket.off("stop typing");
-    //   socket.disconnect();
-    // };
+    return () => {
+      socket.off("message received");
+    };
   });
 
   const fetchMessages = async () => {
