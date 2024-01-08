@@ -70,9 +70,9 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           setFetchAgain(!fetchAgain);
         }
       } else {
-        setMessages([...messages, newMessage]);
+        // setMessages([...messages, newMessage]);
         fetchMessages();
-        // setFetchAgain(!fetchAgain);
+        setFetchAgain(!fetchAgain);
       }
     });
 
@@ -203,19 +203,19 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             borderRadius="lg"
             overflowY="hidden"
           >
-            {loading ? (
+            {loading && (
               <Spinner
                 size={"xl"}
-                w={20}
-                h={20}
-                alignSelf={"center"}
+                w={2}
+                h={2}
+                alignSelf={"flex-start"}
                 margin={"auto"}
               />
-            ) : (
-              <div className="messages">
-                <Chat messages={messages} />
-              </div>
             )}
+            <div className="messages">
+              <Chat messages={messages} />
+            </div>
+
             <FormControl onKeyDown={sendMessage} mt={3}>
               {isTyping && (
                 <Lottie
