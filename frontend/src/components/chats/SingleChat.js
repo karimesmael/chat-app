@@ -78,6 +78,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       if (!notification.includes(newMessage)) {
         setNotification([newMessage, ...notification]);
         setFetchAgain(!fetchAgain);
+        setMessages([...messages, newMessage]);
       }
     } else {
       setMessages([...messages, newMessage]);
