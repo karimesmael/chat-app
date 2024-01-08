@@ -85,6 +85,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         setFetchAgain(!fetchAgain);
       }
       return () => {
+        socket.off("connected");
         socket.off("message received");
         socket.disconnect();
       };
