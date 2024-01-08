@@ -13,7 +13,7 @@ const ChatPage = () => {
   useEffect(() => {
     const user = checkAuth();
     if (!user || user === "EXPIRED") {
-      return redirect("/");
+      return navigate("/");
     }
 
     setUser(user);
