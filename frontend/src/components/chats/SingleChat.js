@@ -60,13 +60,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         setIsTyping(false);
       }
     });
-
-    return () => {
-      //   //   socket.off("connected");
-      //   //   socket.off("typing");
-      //   //   socket.off("stop typing");
-      //   socket.disconnect();
-    };
   });
 
   useEffect(() => {
@@ -76,13 +69,12 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         selectedChatCompare._id !== newMessage.chatId._id
       ) {
         if (!notification.includes(newMessage)) {
-          setNotification([newMessage, ...notification]);
+          setNotification((notification) => [newMessage, ...notification]);
           setFetchAgain(!fetchAgain);
         }
       } else {
         setMessages((messages) => [...messages, newMessage]);
-        // fetchMessages();
-        setFetchAgain(!fetchAgain);
+        setFetchAgain((prev) => !prev);
       }
       return () => {
         socket.off("connected");
@@ -138,7 +130,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         setNewMessage("");
         setMessages([...messages, data]);
         socket.emit("new message", data);
-        setFetchAgain(!fetchAgain);
+        setFetchAgain((prev) => !prev);
       } catch (error) {
         toast({
           status: "error",
@@ -149,6 +141,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     }
     return;
   };
+
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
     if (!socketConnected) return;
