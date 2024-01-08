@@ -5,12 +5,11 @@ import SideDrawer from "../components/SideDrawer";
 import { Box } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 const ChatPage = () => {
-  const [user, setUser, setSelectedChat] = useState();
+  const [user, setUser] = useState();
   const [fetchAgain, setFetchAgain] = useState(false);
 
   const navigate = useNavigate();
   useEffect(() => {
-    setSelectedChat("");
     const user = JSON.parse(localStorage.getItem("userInfo"));
     if (!user) {
       return navigate("/");
