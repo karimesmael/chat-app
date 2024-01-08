@@ -25,7 +25,8 @@ const defaultOptions = {
   },
 };
 const ENDPOINT = "https://free-talk-cha.onrender.com";
-let socket, selectedChatCompare;
+const socket = io(ENDPOINT);
+let selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [messages, setMessages] = useState([]);
@@ -44,7 +45,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   }, [selectedChat]);
 
   useEffect(() => {
-    socket = io(ENDPOINT);
     socket.emit("setup", user);
     socket.on("connected", () => {
       setSocketConnected(true);
@@ -60,6 +60,16 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         setIsTyping(false);
       }
     });
+
+    return () => {
+      //   //   socket.off("connected");
+      //   //   socket.off("typing");
+      //   //   socket.off("stop typing");
+      //   socket.disconnect();
+    };
+  });
+
+  useEffect(() => {
     socket.on("message recieved", (newMessage) => {
       if (
         !selectedChatCompare || // if chat is not selected or doesn't match current chat
@@ -70,20 +80,16 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           setFetchAgain(!fetchAgain);
         }
       } else {
-        // setMessages([...messages, newMessage]);
-        fetchMessages();
+        setMessages((messages) => [...messages, newMessage]);
+        // fetchMessages();
         setFetchAgain(!fetchAgain);
       }
+      return () => {
+        socket.off("message received");
+        socket.disconnect();
+      };
     });
-
-    return () => {
-      //   //   socket.off("connected");
-      socket.off("message received");
-      //   //   socket.off("typing");
-      //   //   socket.off("stop typing");
-      //   socket.disconnect();
-    };
-  });
+  }, [fetchAgain, setNotification, setNewMessage, setFetchAgain, notification]);
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
@@ -129,8 +135,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           config
         );
         setNewMessage("");
-        socket.emit("new message", data);
         setMessages([...messages, data]);
+        socket.emit("new message", data);
         setFetchAgain(!fetchAgain);
       } catch (error) {
         toast({
@@ -206,8 +212,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             {loading && (
               <Spinner
                 size={"xl"}
-                w={2}
-                h={2}
+                w={5}
+                h={5}
                 alignSelf={"flex-start"}
                 margin={"auto"}
               />
