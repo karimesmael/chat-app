@@ -90,7 +90,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         socket.disconnect();
       };
     });
-  }, [fetchAgain, setNotification, setNewMessage, setFetchAgain, notification]);
+  }, []);
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
