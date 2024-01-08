@@ -10,7 +10,7 @@ const ChatPage = () => {
 
   const navigate = useNavigate();
   useEffect(() => {
-    setSelectedChat();
+    setSelectedChat("");
     const user = JSON.parse(localStorage.getItem("userInfo"));
     if (!user) {
       return navigate("/");
