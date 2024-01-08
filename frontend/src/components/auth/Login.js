@@ -62,6 +62,9 @@ const Login = () => {
       }
       setUser(data);
       localStorage.setItem("userInfo", JSON.stringify(data));
+      const expiration = new Date();
+      expiration.setHours(expiration.getHours() + 1);
+      localStorage.setItem("expiration", expiration.toISOString());
 
       toast({
         title: "Login Successful",

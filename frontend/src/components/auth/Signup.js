@@ -71,6 +71,9 @@ const Signup = () => {
         config
       );
       localStorage.setItem("userInfo", JSON.stringify(data));
+      const expiration = new Date();
+      expiration.setHours(expiration.getHours() + 1);
+      localStorage.setItem("expiration", expiration.toISOString());
       toast({
         title: "Account created.",
         description: "We've created your account for you.",

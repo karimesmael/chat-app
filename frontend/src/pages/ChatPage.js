@@ -3,7 +3,7 @@ import ChatBox from "../components/chats/ChatBox";
 import MyChats from "../components/chats/MyChats";
 import SideDrawer from "../components/SideDrawer";
 import { Box } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 const ChatPage = () => {
   const [user, setUser] = useState();
   const [fetchAgain, setFetchAgain] = useState(false);
@@ -11,8 +11,8 @@ const ChatPage = () => {
   const navigate = useNavigate();
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("userInfo"));
-    if (!user) {
-      return navigate("/");
+    if (!user || user === "EXPIRED") {
+      return redirect("/");
     }
 
     setUser(user);
