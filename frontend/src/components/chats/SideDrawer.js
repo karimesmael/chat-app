@@ -19,7 +19,7 @@ import {
   useToast,
   Spinner,
 } from "@chakra-ui/react";
-import { BellIcon, ChevronDownIcon } from "@chakra-ui/icons";
+import { ChatIcon, ChevronDownIcon, SearchIcon } from "@chakra-ui/icons";
 import React, { useState } from "react";
 import ProfileModal from "../user/ProfileModal";
 import { useNavigate } from "react-router-dom";
@@ -132,8 +132,8 @@ const SideDrawer = ({ user }) => {
         <Tooltip hasArrow placement="bottom-end">
           <Button variant="ghost" onClick={onOpen}>
             <i className="fas fa-search"></i>
-            <Text d={{ base: "none", md: "flex" }} px={4}>
-              Search User
+            <Text display={{ md: "flex" }} px={3}>
+              <SearchIcon />
             </Text>
           </Button>
         </Tooltip>
@@ -147,10 +147,10 @@ const SideDrawer = ({ user }) => {
                 count={notification.length}
                 effect={Effect.SCALE}
               />
-              <BellIcon fontSize={"2x1"} m={1} />
+              <ChatIcon fontSize={"2x1"} m={1} />
             </MenuButton>
             <MenuList>
-              {!notification.length && "No new messages"}
+              {!notification.length && "No messages found"}
               {notification.map((not) => (
                 <MenuItem
                   key={not._id}

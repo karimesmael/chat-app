@@ -33,6 +33,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState();
   const [loading, setLoading] = useState(false);
+  const [imageLoading, setImageLoading] = useState(false);
   const toast = useToast();
   const { selectedChat, setSelectedChat, user, notification, setNotification } =
     ChatState();
@@ -158,7 +159,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       formData.append("file", file);
       formData.append("upload_preset", "chat-app");
       formData.append("cloud_name", "db7t3kcn0");
-      setLoading(true);
+      setImageLoading(true);
       try {
         const url = "https://api.cloudinary.com/v1_1/db7t3kcn0/image/upload";
         const res = await fetch(url, {
@@ -185,7 +186,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         setMessages([...messages, data]);
         socket.emit("new message", data);
         setFetchAgain((prev) => !prev);
-        setLoading(false);
+        setImageLoading(false);
       } catch (error) {
         console.log(error);
       }
@@ -265,6 +266,22 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             <div className="messages">
               <Chat messages={messages} />
             </div>
+            {imageLoading && (
+              <Stack
+                direction="column"
+                spacing={40}
+                alignSelf={"flex-end"}
+                marginRight={25}
+              >
+                <Spinner
+                  thickness="4px"
+                  speed="0.85s"
+                  emptyColor="gray.200"
+                  color="blue.500"
+                  size="xl"
+                />
+              </Stack>
+            )}
 
             <FormControl onKeyDown={sendMessage} mt={3}>
               {isTyping && (
