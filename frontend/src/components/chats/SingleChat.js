@@ -72,7 +72,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           console.log("new message");
           console.log(newMessage);
           console.log("notification");
-          console.log(notification);
+          console.log(...notification);
           setNotification((notification) => [newMessage, ...notification]);
           setFetchAgain((prev) => !prev);
         }

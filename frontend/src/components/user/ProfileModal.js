@@ -16,6 +16,7 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  Spinner,
 } from "@chakra-ui/react";
 import { checkAuth, logout } from "../../util/auth";
 import { useEffect, useState } from "react";
@@ -26,6 +27,7 @@ import { ChatState } from "../../Context/ChatProvider";
 const ProfileModal = ({ user, children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [valid, setValid] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { setUser } = ChatState();
 
   useEffect(() => {
@@ -52,7 +54,7 @@ const ProfileModal = ({ user, children }) => {
       formData.append("file", file);
       formData.append("upload_preset", "chat-app");
       formData.append("cloud_name", "db7t3kcn0");
-
+      setLoading(true);
       try {
         const url = "https://api.cloudinary.com/v1_1/db7t3kcn0/image/upload";
         const res = await fetch(url, {
@@ -75,11 +77,13 @@ const ProfileModal = ({ user, children }) => {
           config
         );
         console.log(data);
+        setLoading(false);
         setUser(data);
         localStorage.removeItem("userInfo");
         localStorage.setItem("userInfo", JSON.stringify(data));
         return;
       } catch (error) {
+        setLoading(false);
         console.log(error);
         return alert("failed to change photo please try again");
       }
@@ -92,6 +96,7 @@ const ProfileModal = ({ user, children }) => {
       "Are you sure you want to delete your profile picture  ?"
     );
     if (!agreed) return;
+    setLoading(true);
     try {
       const config = {
         headers: {
@@ -101,10 +106,12 @@ const ProfileModal = ({ user, children }) => {
       };
       const { data } = await axios.delete("/api/users/", config);
       console.log(data);
+      setLoading(false);
       localStorage.setItem("userInfo", JSON.stringify(data));
       setUser(data);
       return window.location.reload();
     } catch (error) {
+      setLoading(false);
       console.log(error);
       return alert("failed to delete photo please try again");
     }
@@ -139,6 +146,7 @@ const ProfileModal = ({ user, children }) => {
             alignItems="center"
             justifyContent="space-between"
           >
+            {loading && <Spinner />}
             {valid && (
               <Menu>
                 <MenuButton>
