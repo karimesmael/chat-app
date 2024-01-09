@@ -30,6 +30,7 @@ import { ChatState } from "../Context/ChatProvider";
 import { getSender } from "../util/ChatLogics";
 import NotificationBadge from "react-notification-badge";
 import { Effect } from "react-notification-badge";
+import { checkAuth } from "../util/auth";
 
 const SideDrawer = ({ user }) => {
   const [search, setSearch] = useState("");
@@ -50,6 +51,7 @@ const SideDrawer = ({ user }) => {
   };
 
   const handleSearch = async () => {
+    checkAuth();
     if (!search.trim()) {
       toast({
         title: "Please Enter something in search",
@@ -86,6 +88,7 @@ const SideDrawer = ({ user }) => {
   };
 
   const accessChat = async (userId) => {
+    checkAuth();
     try {
       setLoadingChat(true);
       const config = {

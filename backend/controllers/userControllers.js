@@ -76,7 +76,7 @@ exports.getUsers = asyncHandler(async (req, res) => {
 
 exports.editPic = asyncHandler(async (req, res) => {
   const { pic } = req.body;
-  const user = await User.findByIdAndUpdate(req.userId, { pic });
+  const user = await User.findByIdAndUpdate(req.userId, { pic }, { new: true });
   return res.status(201).json({
     _id: user._id,
     name: user.name,

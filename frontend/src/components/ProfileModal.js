@@ -66,6 +66,7 @@ const ProfileModal = ({ user, children }) => {
             Authorization: `Bearer ${user.token}`,
           },
         };
+        console.log(pic);
         const { data } = await axios.put(
           "/api/users/",
           {
@@ -74,9 +75,10 @@ const ProfileModal = ({ user, children }) => {
           config
         );
         console.log(data);
-        localStorage.setItem("userInfo", JSON.stringify(data));
         setUser(data);
-        return window.location.reload();
+        localStorage.removeItem("userInfo");
+        localStorage.setItem("userInfo", JSON.stringify(data));
+        return;
       } catch (error) {
         console.log(error);
         return alert("failed to change photo please try again");
