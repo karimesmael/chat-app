@@ -16,6 +16,7 @@ exports.signup = asyncHandler(async (req, res) => {
   if (name.trim() === "" || !email || !password) {
     throw new HttpError("please enter all feilds", 500);
   }
+  email.trim().toLowerCase();
   const userExist = await User.findOne({ email });
   if (userExist) {
     console.log(userExist);
@@ -40,6 +41,7 @@ exports.login = asyncHandler(async (req, res) => {
     throw new HttpError(msg, 422);
   }
   const { email, password } = req.body;
+  email.trim().toLowerCase();
   const user = await User.findOne({ email });
   if (!user) {
     throw new HttpError("Error in password or email", 401);
