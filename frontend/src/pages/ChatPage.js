@@ -3,21 +3,21 @@ import ChatBox from "../components/chats/ChatBox";
 import MyChats from "../components/chats/MyChats";
 import SideDrawer from "../components/SideDrawer";
 import { Box } from "@chakra-ui/react";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { checkAuth } from "../util/auth";
 const ChatPage = () => {
   const [user, setUser] = useState();
   const [fetchAgain, setFetchAgain] = useState(false);
-
   const navigate = useNavigate();
+
   useEffect(() => {
     const user = checkAuth();
     if (!user || user === "EXPIRED") {
       return navigate("/");
     }
-
     setUser(user);
-  }, [navigate]);
+  }, [navigate, setUser]);
+
   return (
     <div style={{ width: "100%" }}>
       {user && <SideDrawer user={user} />}

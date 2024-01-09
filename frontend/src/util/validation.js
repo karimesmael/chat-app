@@ -9,3 +9,9 @@ export function isValidName(name) {
 export function isValidpassword(password) {
   return password.trim() > 6;
 }
+
+export const isImage = (file) => {
+  const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+
+  return allowedTypes.includes(file.type);
+};

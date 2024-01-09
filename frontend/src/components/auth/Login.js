@@ -12,7 +12,6 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChatState } from "../../Context/ChatProvider";
-import GoogleLoginButton from "./GoogleLoginButton";
 
 const Login = () => {
   const toast = useToast();
@@ -72,7 +71,8 @@ const Login = () => {
         duration: 2000,
       });
       setLoading(false);
-      return navigate("chats");
+      navigate("chats");
+      return window.location.reload();
     } catch (error) {
       toast({
         description: "wrong email or password",
@@ -129,8 +129,6 @@ const Login = () => {
       >
         Login as Guest
       </Button>
-
-      <GoogleLoginButton />
     </VStack>
   );
 };

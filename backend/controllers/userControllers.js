@@ -73,3 +73,25 @@ exports.getUsers = asyncHandler(async (req, res) => {
     .select("name email pic");
   return res.status(200).send(users);
 });
+
+exports.editPic = asyncHandler(async (req, res) => {
+  const { pic } = req.body;
+  const user = await User.findByIdAndUpdate(req.userId, { pic });
+  return res.status(201).json({
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    pic: user.pic,
+    token: generateToken(user._id),
+  });
+});
+exports.deletePic = asyncHandler(async (req, res) => {
+  const user = await User.findByIdAndUpdate(req.userId, { pic: "" });
+  return res.status(201).json({
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    pic: "",
+    token: generateToken(user._id),
+  });
+});

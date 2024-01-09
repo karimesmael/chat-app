@@ -9,6 +9,12 @@ exports.sendMessage = asyncHandler(async (req, res) => {
   if (!content || !chatId) {
     throw new Error("invalid data");
   }
+  const chat = await Chat.findOne({
+    _id: chatId,
+    users: { $in: [req.userId] },
+  });
+
+  if (!chat) return res.status(403).send("you are not allowed to send message");
   const newMessage = {
     sender: req.userId,
     content,

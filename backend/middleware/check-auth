@@ -7,10 +7,12 @@ module.exports = async (req, res, next) => {
       throw new Error("Authentication failed!");
     }
     const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
+    if (!decodedToken) {
+      return res.status(401).send("Authentication failed!");
+    }
     req.userId = decodedToken.id;
     next();
   } catch (err) {
-    res.status(401);
-    throw new Error("Authentication failed!");
+    return res.status(401).send("Authentication failed!");
   }
 };

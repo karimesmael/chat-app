@@ -12,4 +12,8 @@ router.post("/login", check("email").isEmail().trim(), userControllers.login);
 
 router.get("/", checkAuth, userControllers.getUsers);
 
+router.put("/", checkAuth, userControllers.editPic);
+
+router.delete("/", checkAuth, userControllers.deletePic);
+
 module.exports = router;
