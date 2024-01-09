@@ -11,6 +11,7 @@ import {
 import Login from "../components/auth/Login";
 import Signup from "../components/auth/Signup";
 import { useEffect } from "react";
+import Footer from "../UI/Footer";
 const HomePage = () => {
   useEffect(() => {
     localStorage.removeItem("userInfo");
@@ -49,6 +50,7 @@ const HomePage = () => {
           </TabPanels>
         </Tabs>
       </Box>
+      <Footer />
     </Container>
   );
 };

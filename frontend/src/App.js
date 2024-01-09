@@ -4,8 +4,14 @@ import HomePage from "./pages/HomePage";
 import ChatPage from "./pages/ChatPage";
 
 const router = createBrowserRouter([
-  { path: "/", element: <HomePage /> },
-  { path: "chats", element: <ChatPage /> },
+  {
+    path: "/",
+    children: [
+      { index: true, element: <HomePage /> },
+      { path: "chats", element: <ChatPage /> },
+    ],
+  },
+
   {},
 ]);
 
