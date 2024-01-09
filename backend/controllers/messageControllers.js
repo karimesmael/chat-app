@@ -38,3 +38,32 @@ exports.getMessages = asyncHandler(async (req, res) => {
     .populate("chatId");
   return res.json(messages);
 });
+
+exports.sendImage = asyncHandler(async (req, res) => {
+  const { url, chatId } = req.body;
+  if (!url || !chatId) {
+    throw new Error("invalid data");
+  }
+  const chat = await Chat.findOne({
+    _id: chatId,
+    users: { $in: [req.userId] },
+  });
+
+  if (!chat) return res.status(403).send("you are not allowed to send message");
+  const newMessage = {
+    sender: req.userId,
+    url,
+    chatId,
+    content: "image",
+    messageType: "image",
+  };
+  let message = await Message.create(newMessage);
+  message = await message.populate("sender", "name pic");
+  message = await message.populate("chatId");
+  message = await User.populate(message, {
+    path: "chatId.users",
+    select: "name pic email",
+  });
+  await Chat.findByIdAndUpdate(chatId, { latestMessage: message });
+  return res.json(message);
+});

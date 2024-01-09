@@ -3,11 +3,11 @@ import { FormControl } from "@chakra-ui/form-control";
 import { Input } from "@chakra-ui/input";
 import { Box, Text } from "@chakra-ui/layout";
 import "./styles.css";
-import { IconButton, Spinner, useToast } from "@chakra-ui/react";
+import { Button, IconButton, Spinner, useToast, Stack } from "@chakra-ui/react";
 import { getSender, getSenderFull } from "../../util/ChatLogics";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { ArrowBackIcon } from "@chakra-ui/icons";
+import { ArrowBackIcon, AttachmentIcon } from "@chakra-ui/icons";
 import ProfileModal from "../user/ProfileModal";
 import { ChatState } from "../../Context/ChatProvider";
 import UpdateGroupChatModal from "./UpdateGroupChatModal";
@@ -15,6 +15,7 @@ import Chat from "./Chat";
 import io from "socket.io-client";
 import Lottie from "react-lottie";
 import animationData from "../../animations/typing.json";
+import { isImage } from "../../util/validation";
 
 const defaultOptions = {
   loop: true,
@@ -142,6 +143,55 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     return;
   };
 
+  const sendImageHandler = () => {
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = "image/*";
+    fileInput.click();
+
+    fileInput.addEventListener("change", async () => {
+      const file = fileInput.files[0];
+      if (!isImage(file)) {
+        return alert("please choose valid image");
+      }
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "chat-app");
+      formData.append("cloud_name", "db7t3kcn0");
+      setLoading(true);
+      try {
+        const url = "https://api.cloudinary.com/v1_1/db7t3kcn0/image/upload";
+        const res = await fetch(url, {
+          method: "POST",
+          body: formData,
+        });
+        let pic = (await res.json()).url;
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
+        };
+        console.log(pic);
+        const { data } = await axios.post(
+          "/api/message/image",
+          {
+            url: pic,
+            chatId: selectedChat._id,
+          },
+          config
+        );
+        console.log(data);
+        setMessages([...messages, data]);
+        socket.emit("new message", data);
+        setFetchAgain((prev) => !prev);
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+      }
+    });
+  };
+
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
     if (!socketConnected) return;
@@ -225,13 +275,33 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                   style={{ marginBottom: 15, marginLeft: 1 }}
                 />
               )}
-              <Input
-                variant={"filled"}
-                bg="#DDD"
-                placeholder="enter a message"
-                onChange={typingHandler}
-                value={newMessage}
-              />
+              <Box
+                display={"flex"}
+                direction="column"
+                justifyContent={"space-between"}
+              >
+                <AttachmentIcon boxSize={8} onClick={sendImageHandler} />
+                <Input
+                  width={"85%"}
+                  variant={"filled"}
+                  bg="#DDD"
+                  placeholder="enter a message"
+                  onChange={typingHandler}
+                  value={newMessage}
+                />
+                <Stack direction="row" spacing={4}>
+                  <Button
+                    colorScheme="teal"
+                    variant="solid"
+                    onClick={() => {
+                      sendMessage({ key: "Enter" });
+                    }}
+                    type="submit"
+                  >
+                    Send
+                  </Button>
+                </Stack>
+              </Box>
             </FormControl>
           </Box>
         </>

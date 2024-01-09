@@ -1,6 +1,7 @@
 import { Avatar } from "@chakra-ui/avatar";
 import { Tooltip } from "@chakra-ui/tooltip";
 import ScrollableFeed from "react-scrollable-feed";
+import { Image } from "@chakra-ui/react";
 import {
   isLastMessage,
   isSameSender,
@@ -42,7 +43,11 @@ const Chat = ({ messages }) => {
                 maxWidth: "75%",
               }}
             >
-              {m.content}
+              {m.messageType === "text" ? (
+                m.content
+              ) : (
+                <Image boxSize="150px" objectFit="cover" src={m.url} />
+              )}
             </span>
           </div>
         ))}
