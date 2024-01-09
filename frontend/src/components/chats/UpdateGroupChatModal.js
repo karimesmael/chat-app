@@ -18,9 +18,9 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useState } from "react";
-import { ChatState } from "../Context/ChatProvider";
-import UserBadgeItem from "./UserBadgeItem";
-import UserListItem from "./UserListItem";
+import { ChatState } from "../../Context/ChatProvider";
+import UserBadgeItem from "../user/UserBadgeItem";
+import UserListItem from "../user/UserListItem";
 
 const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -28,11 +28,13 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
   const [renameloading, setRenameLoading] = useState(false);
+  const [inputValue, setInputValue] = useState("");
   const toast = useToast();
 
   const { selectedChat, setSelectedChat, user } = ChatState();
 
   const handleSearch = async (query) => {
+    setInputValue(query);
     setSearchResult([]);
     if (!query.trim()) {
       return;
@@ -49,14 +51,15 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
       setLoading(false);
       setSearchResult(data);
     } catch (error) {
-      toast({
-        title: "Error Occured!",
-        description: "Failed to Load the Search Results",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-        position: "bottom-left",
-      });
+      // toast({
+      //   title: "Error Occured!",
+      //   description: "Failed to Load the Search Results",
+      //   status: "error",
+      //   duration: 3000,
+      //   isClosable: true,
+      //   position: "bottom-left",
+      // });
+      console.log(error);
     }
   };
 
@@ -139,13 +142,15 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
 
       setSelectedChat(data);
       setFetchAgain(!fetchAgain);
+      setInputValue("");
+      setSearchResult([]);
       setLoading(false);
     } catch (error) {
       toast({
         title: "Error Occured!",
         description: error.message,
         status: "error",
-        duration: 5000,
+        duration: 3000,
         isClosable: true,
         position: "bottom",
       });
@@ -254,6 +259,7 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
                 placeholder="Add User to group"
                 mb={1}
                 onChange={(e) => handleSearch(e.target.value)}
+                value={inputValue}
               />
             </FormControl>
 

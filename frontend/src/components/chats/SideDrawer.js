@@ -21,16 +21,16 @@ import {
 } from "@chakra-ui/react";
 import { BellIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import React, { useState } from "react";
-import ProfileModal from "./ProfileModal";
+import ProfileModal from "../user/ProfileModal";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import ChatLoading from "./chats/ChatLoading";
-import UserListItem from "./UserListItem";
-import { ChatState } from "../Context/ChatProvider";
-import { getSender } from "../util/ChatLogics";
+import ChatLoading from "./ChatLoading";
+import UserListItem from "../user/UserListItem";
+import { ChatState } from "../../Context/ChatProvider";
+import { getSender } from "../../util/ChatLogics";
 import NotificationBadge from "react-notification-badge";
 import { Effect } from "react-notification-badge";
-import { checkAuth } from "../util/auth";
+import { checkAuth } from "../../util/auth";
 
 const SideDrawer = ({ user }) => {
   const [search, setSearch] = useState("");

@@ -16,8 +16,8 @@ import {
 import axios from "axios";
 import { useState } from "react";
 import { ChatState } from "../../Context/ChatProvider";
-import UserBadgeItem from "../UserBadgeItem";
-import UserListItem from "../UserListItem";
+import UserBadgeItem from "../user/UserBadgeItem";
+import UserListItem from "../user/UserListItem";
 
 const GroupChatModal = ({ children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -25,6 +25,8 @@ const GroupChatModal = ({ children }) => {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [inputValue, setInputValue] = useState("");
+
   const toast = useToast();
 
   const { user, chats, setChats } = ChatState();
@@ -43,9 +45,12 @@ const GroupChatModal = ({ children }) => {
     }
 
     setSelectedUsers([...selectedUsers, user]);
+    setInputValue("");
+    setSearchResult([]);
   };
 
   const handleSearch = async (query) => {
+    setInputValue(query);
     setSearchResult([]);
     if (!query.trim()) {
       return;
@@ -62,11 +67,13 @@ const GroupChatModal = ({ children }) => {
       setLoading(false);
       setSearchResult(data);
     } catch (error) {
+      setLoading(false);
+      setInputValue([]);
+      setSearchResult([]);
       toast({
-        title: "Error Occured!",
-        description: "Failed to Load the Search Results",
+        title: "Network Error",
         status: "error",
-        duration: 3000,
+        duration: 2000,
         isClosable: true,
         position: "bottom-left",
       });
@@ -114,13 +121,12 @@ const GroupChatModal = ({ children }) => {
       });
       setSelectedUsers([]);
     } catch (error) {
-      console.log("/////////////////////////////////////////////////////////");
       console.log(error);
       toast({
-        title: "Failed to Create the Chat!",
+        title: "Failed to Create the Chat! ",
         // description: error.response.data,
         status: "error",
-        duration: 5000,
+        duration: 3000,
         isClosable: true,
         position: "bottom",
       });
@@ -153,9 +159,10 @@ const GroupChatModal = ({ children }) => {
             </FormControl>
             <FormControl>
               <Input
-                placeholder="Add Users eg: John, Piyush, Jane"
+                placeholder="Add Users eg: Karim, Ahmed, Ali"
                 mb={1}
                 onChange={(e) => handleSearch(e.target.value)}
+                value={inputValue}
               />
             </FormControl>
             <Box w="100%" display="flex" flexWrap="wrap">

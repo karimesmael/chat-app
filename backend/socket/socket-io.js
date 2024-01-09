@@ -1,7 +1,9 @@
 exports.connectToSocket = (server) => {
   const io = require("socket.io")(server, {
     pingTimeout: 60000,
-    cors: { origin: "https://free-talk-cha.onrender.com" },
+    cors: {
+      origin: "https://free-talk-cha.onrender.com",
+    },
   });
 
   io.on("connection", (socket) => {

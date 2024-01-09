@@ -17,11 +17,11 @@ import {
   MenuList,
   MenuItem,
 } from "@chakra-ui/react";
-import { checkAuth, logout } from "../util/auth";
+import { checkAuth, logout } from "../../util/auth";
 import { useEffect, useState } from "react";
-import { isImage } from "../util/validation";
+import { isImage } from "../../util/validation";
 import axios from "axios";
-import { ChatState } from "../Context/ChatProvider";
+import { ChatState } from "../../Context/ChatProvider";
 
 const ProfileModal = ({ user, children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
