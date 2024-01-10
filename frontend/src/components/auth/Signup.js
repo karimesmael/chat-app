@@ -17,6 +17,7 @@ import {
   isValidName,
   isValidPassword,
 } from "../../util/validation";
+import { ChatState } from "../../Context/ChatProvider";
 
 const Signup = () => {
   const toast = useToast();
@@ -30,6 +31,7 @@ const Signup = () => {
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState(true);
   const [loading, setLoading] = useState(false);
+  const { setUser } = ChatState();
 
   const nameHandler = (e) => {
     const value = e.target.value;
@@ -109,6 +111,7 @@ const Signup = () => {
       const expiration = new Date();
       expiration.setHours(expiration.getHours() + 1);
       localStorage.setItem("expiration", expiration.toISOString());
+      setUser(data);
       toast({
         title: "Account created.",
         description: "We've created your account for you.",
@@ -117,7 +120,8 @@ const Signup = () => {
         isClosable: true,
       });
       setLoading(false);
-      return navigate("chats");
+      navigate("chats");
+      return window.location.reload();
     } catch (error) {
       toast({
         title: "error",
