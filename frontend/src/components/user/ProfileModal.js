@@ -179,6 +179,14 @@ const ProfileModal = ({ user, children }) => {
                 )}
               </Menu>
             )}
+            {!valid && (
+              <Image
+                borderRadius="full"
+                boxSize="150px"
+                src={user.pic}
+                alt={user.name}
+              />
+            )}
             <Text
               fontSize={{ base: "28px", md: "30px" }}
               fontFamily="Work sans"
