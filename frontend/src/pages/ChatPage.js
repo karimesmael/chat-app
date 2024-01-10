@@ -17,7 +17,7 @@ const ChatPage = () => {
       if (!data || data === "EXPIRED") {
         navigate("/");
       }
-    }, 10000);
+    }, 3000);
   }, [navigate]);
 
   return (
