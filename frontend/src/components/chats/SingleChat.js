@@ -297,9 +297,12 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 direction="column"
                 justifyContent={"space-between"}
               >
-                <AttachmentIcon boxSize={8} onClick={sendImageHandler} />
+                <AttachmentIcon
+                  marginRight={2}
+                  boxSize={8}
+                  onClick={sendImageHandler}
+                />
                 <Input
-                  width={"85%"}
                   variant={"filled"}
                   bg="#DDD"
                   placeholder="enter a message"
