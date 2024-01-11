@@ -11,16 +11,16 @@ const ChatPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    let timer = setInterval(() => {
+    const data = checkAuth();
+    if (!data || data === "EXPIRED") {
+      navigate("/");
+    }
+    setInterval(() => {
       const data = checkAuth();
       if (!data || data === "EXPIRED") {
-        alert("Your session has expired, please login");
         navigate("/");
       }
     }, 3000);
-    return () => {
-      clearInterval(timer);
-    };
   }, [navigate]);
 
   return (
