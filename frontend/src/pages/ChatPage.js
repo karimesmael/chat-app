@@ -7,17 +7,20 @@ import { checkAuth } from "../util/auth";
 import { ChatState } from "../Context/ChatProvider";
 import { useNavigate } from "react-router-dom";
 const ChatPage = () => {
-  const { user } = ChatState();
-  const [fetchAgain, setFetchAgain] = useState(false);
+  const { user, setFetchAgain, fetchAgain } = ChatState();
   const navigate = useNavigate();
 
   useEffect(() => {
-    setInterval(() => {
+    let timer = setInterval(() => {
       const data = checkAuth();
       if (!data || data === "EXPIRED") {
+        alert("Your session has expired, please login");
         navigate("/");
       }
     }, 3000);
+    return () => {
+      clearInterval(timer);
+    };
   }, [navigate]);
 
   return (

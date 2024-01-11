@@ -20,7 +20,7 @@ const Login = () => {
   const [password, setPassword] = useState();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { setUser } = ChatState();
+  const { setUser, setSelectedChat, setFetchAgain } = ChatState();
   const showHandler = () => {
     setShow(!show);
   };
@@ -61,6 +61,8 @@ const Login = () => {
       }
       setUser(data);
       localStorage.setItem("userInfo", JSON.stringify(data));
+      setSelectedChat(null);
+      setFetchAgain((value) => !value);
       const expiration = new Date();
       expiration.setHours(expiration.getHours() + 1);
       localStorage.setItem("expiration", expiration.toISOString());
@@ -71,8 +73,7 @@ const Login = () => {
         duration: 2000,
       });
       setLoading(false);
-      navigate("chats");
-      return window.location.reload();
+      return navigate("chats");
     } catch (error) {
       toast({
         description: "wrong email or password",

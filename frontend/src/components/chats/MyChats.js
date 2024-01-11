@@ -46,7 +46,7 @@ const MyChats = ({ fetchAgain }) => {
 
     fetchChats();
     // eslint-disable-next-line
-  }, [fetchAgain]);
+  }, [fetchAgain, user]);
 
   return (
     <Box

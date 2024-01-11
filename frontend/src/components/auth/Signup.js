@@ -31,7 +31,7 @@ const Signup = () => {
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState(true);
   const [loading, setLoading] = useState(false);
-  const { setUser } = ChatState();
+  const { setUser, setSelectedChat, setFetchAgain } = ChatState();
 
   const nameHandler = (e) => {
     const value = e.target.value;
@@ -112,6 +112,8 @@ const Signup = () => {
       expiration.setHours(expiration.getHours() + 1);
       localStorage.setItem("expiration", expiration.toISOString());
       setUser(data);
+      setSelectedChat(null);
+      setFetchAgain((value) => !value);
       toast({
         title: "Account created.",
         description: "We've created your account for you.",
@@ -120,8 +122,7 @@ const Signup = () => {
         isClosable: true,
       });
       setLoading(false);
-      navigate("chats");
-      return window.location.reload();
+      return navigate("chats");
     } catch (error) {
       toast({
         title: "error",
