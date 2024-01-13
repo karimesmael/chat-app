@@ -43,7 +43,7 @@ const Chat = ({ messages }) => {
                 maxWidth: "75%",
               }}
             >
-              {m.messageType === "text" ? (
+              {m.messageType !== "image" ? (
                 m.content
               ) : (
                 <Image boxSize="150px" objectFit="cover" src={m.url} />
