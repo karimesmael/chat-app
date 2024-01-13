@@ -111,37 +111,38 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   };
 
   const sendMessage = async (e) => {
-    if (e.key === "Enter" && newMessage) {
-      if (newMessage.trim() === "") return;
-      setNewMessage("");
-      socket.emit("stop typing", selectedChat._id);
-      try {
-        const config = {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user.token}`,
-          },
-        };
-        const { data } = await axios.post(
-          "/api/message/",
-          {
-            content: newMessage,
-            chatId: selectedChat._id,
-          },
-          config
-        );
-        setMessages([...messages, data]);
-        socket.emit("new message", data);
-        setFetchAgain((prev) => !prev);
-      } catch (error) {
-        toast({
-          status: "error",
-          title: error.message,
-          duration: 3000,
-        });
-      }
+    if (e.key !== "Enter" || !newMessage || newMessage.trim() === "") {
+      return;
     }
-    return;
+    setMessages([...messages, { content: newMessage, sender: user }]);
+    setNewMessage("");
+    socket.emit("stop typing", selectedChat._id);
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+      const { data } = await axios.post(
+        "/api/message/",
+        {
+          content: newMessage,
+          chatId: selectedChat._id,
+        },
+        config
+      );
+      console.log(data);
+      // setMessages([...messages, data]);
+      socket.emit("new message", data);
+      setFetchAgain((prev) => !prev);
+    } catch (error) {
+      toast({
+        status: "error",
+        title: error.message,
+        duration: 3000,
+      });
+    }
   };
 
   const sendImageHandler = () => {
