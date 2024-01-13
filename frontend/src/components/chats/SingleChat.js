@@ -113,6 +113,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const sendMessage = async (e) => {
     if (e.key === "Enter" && newMessage) {
       if (newMessage.trim() === "") return;
+      setNewMessage("");
       socket.emit("stop typing", selectedChat._id);
       try {
         const config = {
@@ -129,7 +130,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           },
           config
         );
-        setNewMessage("");
         setMessages([...messages, data]);
         socket.emit("new message", data);
         setFetchAgain((prev) => !prev);
