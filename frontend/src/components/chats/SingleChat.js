@@ -114,7 +114,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     if (e.key !== "Enter" || !newMessage || newMessage.trim() === "") {
       return;
     }
-    setMessages([...messages, { content: newMessage, sender: user }]);
+    setMessages([
+      ...messages,
+      { content: newMessage, sender: user, messageType: "text" },
+    ]);
     setNewMessage("");
     socket.emit("stop typing", selectedChat._id);
     try {
