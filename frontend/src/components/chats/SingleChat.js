@@ -78,13 +78,13 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         setMessages((messages) => [...messages, newMessage]);
         setFetchAgain((prev) => !prev);
       }
-      return () => {
-        socket.off("connected");
-        socket.off("message recieved");
-        socket.disconnect();
-      };
     });
-  }, []);
+    return () => {
+      socket.off("connected");
+      socket.off("message recieved");
+      socket.disconnect();
+    };
+  }, [selectedChat, selectedChatCompare, notification, messages]);
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
